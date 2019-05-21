@@ -1,0 +1,84 @@
+import os
+import psycopg2
+import sys
+import re
+import chardet
+
+directory = sys.argv[1]
+
+def main():
+    readdirectory(directory)
+
+def readdirectory(directory):
+    arr = os.listdir(directory)
+    print arr
+
+def readfile(filename):
+    with open(filename) as f:
+        for line in f:
+            parse(line)
+
+def checkmailorlogin(world):
+    EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
+    if not EMAIL_REGEX.match(world):
+        return 0
+    else:
+        return 1
+
+def parse(line):
+    world = line.split(':')
+    conn = connectdatabase()
+    if ( checkmailorlogin(world[0]) == 1 ):
+        insertuser(conn, "", world[0])
+    else
+        insertuser(conn, world[0], "")
+    insertpassword(conn, world[1])
+
+def insertuser(conn, entrylogin, entrymail):
+    cur = conn.cursor()
+    cur.execute("INSERT INTO t_user (id_user, login, mail) \
+          VALUES (, %s, %s)", (entrylogin, entrymail));
+    conn.commit()
+    print("Insert Success")
+
+def insertpassword(conn, entrypass):
+    cur = conn.cursor()
+    cur.execute("INSERT INTO password (id_password, password) \
+          VALUES (, %s)", (entrypass));
+    conn.commit()
+    print("Insert Success")
+
+def checkentry(conn):
+    outputpasswords(conn)
+    outputusers(conn)
+
+def connectdatabase():
+    conn = psycopg2.connect(database="dbpassword", user="mypguser", password="", host="127.0.0.1", port="5432")
+    print("Database Connected....")
+    return conn
+
+def decodatabase(conn):
+    conn.close()
+
+def outputpasswords(conn):
+    cur = conn.cursor()
+    cur.execute("SELECT id_password, password from t_password")
+    print("ID   password ")
+    print("--------------")
+    rows = cur.fetchall()
+    for row in rows:
+        print(row[0], ' ', str(row[1]).strip())
+    decodatabase(conn)
+
+def outputusers(conn):
+    cur = conn.cursor()
+    cur.execute("SELECT id_user, login, email from t_user")
+    print("ID   name email  ")
+    print("--------------")
+    rows = cur.fetchall()
+    for row in rows:
+        print(row[0], ' ', str(row[1]).strip())
+    decodatabase(conn)
+
+if __name__== "main":
+    main()
