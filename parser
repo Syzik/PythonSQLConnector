@@ -84,51 +84,66 @@ def parse(line):
         #insertdico(conn,world[0], "", world[1])
 
 def insertdico(conn, entrylogin, entrymail, entrypass):
-    cur = conn.cursor()
-    cur.execute("select id_password from t_password where password like %s", (entrypass))
-    rows = cur.fetchall()
-    for row in rows:
-        idpassword = row[0]
-    if entrylogin == "":
-        cur2 = conn.cursor
-        cur2.execute("select id_user from t_user where email like %s", (entrymail))
-        rows = cur2.fetchall()
+    try:
+        cur = conn.cursor()
+        cur.execute("select id_password from t_password where password like %s", (entrypass))
+        rows = cur.fetchall()
         for row in rows:
-            iduser = row[0]
-    else:
-        cur2 = conn.cursor
-        cur2.execute("select id_user from t_user where login like %s", (entrylogin))
-        rows = cur2.fetchall()
-        for row in rows:
-            iduser = row[0]
+            idpassword = row[0]
+        if entrylogin == "":
+            cur2 = conn.cursor
+            cur2.execute("select id_user from t_user where email like %s", (entrymail))
+            rows = cur2.fetchall()
+            for row in rows:
+                iduser = row[0]
+        else:
+            cur2 = conn.cursor
+            cur2.execute("select id_user from t_user where login like %s", (entrylogin))
+            rows = cur2.fetchall()
+            for row in rows:
+                iduser = row[0]
+    except Exception:
+        print("InsertDico get ids from entry didn't work")
 
-    cur.execute("INSERT INTO t_dico (id_dico, idpassword, iduser) \
-              VALUES (, %s, %s)", (idpassword, iduser));
-    conn.commit()
-    print("Insert Success")
+    try :
+        cur.execute("INSERT INTO t_dico (id_dico, idpassword, iduser) \
+                  VALUES (, %s, %s)", (idpassword, iduser));
+        conn.commit()
+        print("Insert Success")
+    except Exception :
+        print("Insert t_dico didn't work")
 
 def insertuser(conn, entrylogin, entrymail):
-    cur = conn.cursor()
-    cur.execute("INSERT INTO t_user (id_user, login, mail) \
-          VALUES (, %s, %s)", (entrylogin, entrymail));
-    conn.commit()
-    print("Insert Success")
+    try:
+        cur = conn.cursor()
+        cur.execute("INSERT INTO t_user (id_user, login, mail) \
+              VALUES (, %s, %s)", (entrylogin, entrymail));
+        conn.commit()
+        print("Insert Success")
+    except Exception:
+        print("Insert t_user didn't work")
 
 def insertpassword(conn, entrypass):
-    cur = conn.cursor()
-    cur.execute("INSERT INTO password (id_password, password) \
-          VALUES (, %s)", (entrypass));
-    conn.commit()
-    print("Insert Success")
+    try:
+        cur = conn.cursor()
+        cur.execute("INSERT INTO password (id_password, password) \
+               VALUES (, %s)", (entrypass));
+        conn.commit()
+        print("Insert Success")
+    except Exception :
+        print("Insert t_password didn't work")
 
 def checkentry(conn):
     outputpasswords(conn)
     outputusers(conn)
 
 def connectdatabase():
-    conn = psycopg2.connect(database="dbpassword", user="mypguser", password="", host="127.0.0.1", port="5432")
-    print("Database Connected....")
-    return conn
+    try :
+        conn = psycopg2.connect(database="dbpassword", user="mypguser", password="", host="127.0.0.1", port="5432")
+        print("Database Connected....")
+        return conn
+    except Exception :
+        print("Connection bdd didn't work")
 
 def decodatabase(conn):
     conn.close()
