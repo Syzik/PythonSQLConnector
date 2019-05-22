@@ -3,17 +3,25 @@ import psycopg2
 import sys
 import re
 import chardet
+import codecs
 from typing import Any
 
+
+
 directory = sys.argv[1]
+global linecount
+global error
+error = 0
+linecount = 0
+
 
 def main():
     print('main before function')
     readDirectory(directory)
 
 def readDirectory(directory):
-    linecount = 0
     filecount = 0
+    global  linecount
     print('directory = ' + directory)
     print('directory (absolute) = ' + os.path.abspath(directory))
 
@@ -32,19 +40,26 @@ def readDirectory(directory):
                 with open(file_path, 'rb') as f:
                     filecount = filecount + 1
                     print("filecount = %s\n" % (filecount))
-                    readfile(file_path, linecount)
+                    readfile(file_path)
+                    print('line count : %s' % linecount)
                     f_content = f.read()
                     list_file.write(('The file %s contains:\n' % filename).encode('utf-8'))
                     list_file.write(f_content)
                     list_file.write(b'\n')
 
-def readfile(filename, linecount):
+def readfile(filename):
+    global linecount
+    global error
     with open(filename) as f:
         for line in f:
-            print line
+            charesult = chardet.detect(line)
+            try :
+                parse(line.decode(charesult['encoding']))
+            except :
+                error += 1
+                print("error : %s\n" % (error))
+                continue
             linecount = linecount + 1
-            print('line count : %s' % linecount)
-#           parse(line)
 
 def checkmailorlogin(world):
     EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
@@ -55,12 +70,36 @@ def checkmailorlogin(world):
 
 def parse(line):
     world = line.split(':')
-    conn = connectdatabase()
+    print world
+    #conn = connectdatabase()
     if ( checkmailorlogin(world[0]) == 1 ):
-        insertuser(conn, "", world[0])
+        print("it's a mail")
+        #insertuser(conn, "", world[0])
+        # insertpassword(conn, world[1])
+        #insertdico(conn, "", world[0], world[1])
     else:
-        insertuser(conn, world[0], "")
-    insertpassword(conn, world[1])
+        print("it's not a mail")
+        #insertuser(conn, world[0], "")
+        #insertpassword(conn, world[1])
+        #insertdico(conn,world[0], "", world[1])
+
+def insertdico(conn, entrylogin, entrymail, entrypass):
+    cur = conn.cursor()
+    cur.execute("select id_password from t_password where password like %s", (entrypass))
+    rows = cur.fetchall()
+    for row in rows:
+        idpassword = row[0]
+
+    cur2 = conn.cursor
+    cur2.execute("select id_user from t_user where email like %s", (entrymail))
+    rows = cur2.fetchall()
+    for row in rows:
+        iduser = row[0]
+
+    cur.execute("INSERT INTO t_dico (id_dico, idpassword, iduser) \
+              VALUES (, %s, %s)", (idpassword, iduser));
+    conn.commit()
+    print("Insert Success")
 
 def insertuser(conn, entrylogin, entrymail):
     cur = conn.cursor()
