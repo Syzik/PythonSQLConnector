@@ -89,12 +89,18 @@ def insertdico(conn, entrylogin, entrymail, entrypass):
     rows = cur.fetchall()
     for row in rows:
         idpassword = row[0]
-
-    cur2 = conn.cursor
-    cur2.execute("select id_user from t_user where email like %s", (entrymail))
-    rows = cur2.fetchall()
-    for row in rows:
-        iduser = row[0]
+    if entrylogin == "":
+        cur2 = conn.cursor
+        cur2.execute("select id_user from t_user where email like %s", (entrymail))
+        rows = cur2.fetchall()
+        for row in rows:
+            iduser = row[0]
+    else:
+        cur2 = conn.cursor
+        cur2.execute("select id_user from t_user where login like %s", (entrylogin))
+        rows = cur2.fetchall()
+        for row in rows:
+            iduser = row[0]
 
     cur.execute("INSERT INTO t_dico (id_dico, idpassword, iduser) \
               VALUES (, %s, %s)", (idpassword, iduser));
