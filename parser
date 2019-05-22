@@ -3,6 +3,7 @@ import psycopg2
 import sys
 import re
 import chardet
+from typing import Any
 
 directory = sys.argv[1]
 
@@ -10,8 +11,9 @@ def main():
     print('main before function')
     readDirectory(directory)
 
-
 def readDirectory(directory):
+    linecount = 0
+    filecount = 0
     print('directory = ' + directory)
     print('directory (absolute) = ' + os.path.abspath(directory))
 
@@ -26,19 +28,23 @@ def readDirectory(directory):
 
             for filename in files:
                 file_path = os.path.join(root, filename)
-
                 print('\t- file %s (full path: %s)' % (filename, file_path))
-
                 with open(file_path, 'rb') as f:
+                    filecount = filecount + 1
+                    print("filecount = %s\n" % (filecount))
+                    readfile(file_path, linecount)
                     f_content = f.read()
                     list_file.write(('The file %s contains:\n' % filename).encode('utf-8'))
                     list_file.write(f_content)
                     list_file.write(b'\n')
 
-def readfile(filename):
+def readfile(filename, linecount):
     with open(filename) as f:
         for line in f:
-            parse(line)
+            print line
+            linecount = linecount + 1
+            print('line count : %s' % linecount)
+#           parse(line)
 
 def checkmailorlogin(world):
     EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
