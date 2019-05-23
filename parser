@@ -71,17 +71,17 @@ def checkmailorlogin(world):
 def parse(line):
     world = line.split(':')
     print world
-    #conn = connectdatabase()
+    conn = connectdatabase()
     if ( checkmailorlogin(world[0]) == 1 ):
         print("it's a mail")
-        #insertuser(conn, "", world[0])
-        # insertpassword(conn, world[1])
-        #insertdico(conn, "", world[0], world[1])
+        insertuser(conn, "", world[0])
+        insertpassword(conn, world[1])
+        insertdico(conn, "", world[0], world[1])
     else:
         print("it's not a mail")
-        #insertuser(conn, world[0], "")
-        #insertpassword(conn, world[1])
-        #insertdico(conn,world[0], "", world[1])
+        insertuser(conn, world[0], "")
+        insertpassword(conn, world[1])
+        insertdico(conn,world[0], "", world[1])
 
 def insertdico(conn, entrylogin, entrymail, entrypass):
     try:
