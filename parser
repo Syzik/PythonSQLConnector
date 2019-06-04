@@ -65,22 +65,31 @@ def checkmailorlogin(world):
         return 1
 
 
-def whatToDo(user, password):
-    if (checkuserexist(world[0]) == 1 && checkpassexist(world[1]) == 1):
+def whatToDo(conn, user, password):
+    if (checkuserexist(conn, user) == 1 && checkpassexist(conn, password) == 1):
         # get id pass/user
-        # new entry t_dico -> id user id pass 
-    elif (checkuserexist(world[0]) == 0 && checkpassexist(world[1]) == 0):
+        userid = getuserid(conn,user)
+        passid = getpassid(conn,password)
+        # new entry t_dico -> id user id pass
+        
+    elif (checkuserexist(conn, user) == 0 && checkpassexist(conn, password) == 0):
         # new entry t_pass
+        insertpass(conn,password)
         # new entry t_user
-        # new entry t_dico -> iduser idpass
-    elif (checkuserexist(world[0]) == 0 && checkpassexist(world[1]) == 1):
+        insertuser(conn,user)
+        # new entry t_dico ->. iduser idpa.ss
+    elif (checkuserexist(conn, user) == 0 && checkpassexist(conn, password) == 1):
         # get id password
+        passid = getpassid(conn,password)
         # new entry t_user
-        # new entry t_dico -> idpass iduser
-    elif (checkuserexist(world[0]) == 1 && checkpassexist(world[1]) == 0):
+        insertuser(conn,user)
+        # new entry t_dico ->. idpass idus.er
+    elif (checkuserexist(conn, user) == 1 && checkpassexist(conn, password) == 0):
         # get id user
+        userid = getuserid(conn,user)
         # new entry password
-        #new entry t_dico -> iduser idpassword
+        insertpassword(conn,password)
+        # new entry t_dico ->. iduser idpasswo.rd
         
 def parse(line):
     world = line.split(':')
@@ -88,7 +97,7 @@ def parse(line):
     conn = connectdatabase()
     if ( checkmailorlogin(world[0]) == 1 ):
         print("it's a mail")
-          #whatTodo(world[0], world[1])
+          #whatTodo(conn, world[0], world[1])
         insertuser(conn, "", world[0])
         insertpassword(conn, world[1])
         insertdico(conn, "", world[0], world[1])
@@ -98,6 +107,8 @@ def parse(line):
         insertpassword(conn, world[1])
         insertdico(conn,world[0], "", world[1])
 
+
+        --------------------------------------------------------
 def insertdico(conn, entrylogin, entrymail, entrypass):
     try:
         cur = conn.cursor()
@@ -127,17 +138,30 @@ def insertdico(conn, entrylogin, entrymail, entrypass):
         print("Insert Success")
     except Exception :
         print("Insert t_dico didn't work")
-
-def insertuser(conn, entrylogin, entrymail):
-    try:
-        cur = conn.cursor()
-        cur.execute("INSERT INTO t_user (id_user, login, mail) \
-              VALUES (, %s, %s)", (entrylogin, entrymail));
-        conn.commit()
-        print("Insert Success")
-    except Exception:
-        print("Insert t_user didn't work")
-
+        ----------------------------------------------------------------------
+        
+def insertuser(conn, entry):
+    if (checkmailorlogin(entry) == 0):
+        #login
+        try:
+            cur = conn.cursor()
+            cur.execute("INSERT INTO t_user (id_user, login, mail) \
+                 VALUES (, %s, %s)", (entry, ""));
+            conn.commit()
+            print("Insert Success")
+        except Exception:
+            print("Insert t_user didn't work")
+    else:
+        #email
+        try:
+            cur = conn.cursor()
+            cur.execute("INSERT INTO t_user (id_user, login, mail) \
+                 VALUES (, %s, %s)", ("", entry));
+            conn.commit()
+            print("Insert Success")
+        except Exception:
+            print("Insert t_user didn't work") 
+        
 def insertpassword(conn, entrypass):
     try:
         cur = conn.cursor()
@@ -163,27 +187,21 @@ def connectdatabase():
 def decodatabase(conn):
     conn.close()
 
-def outputpasswords(conn):
+def getuserid(conn, user):
     cur = conn.cursor()
-    cur.execute("SELECT id_password, password from t_password")
-    print("ID   password ")
-    print("--------------")
+    cur.execute("select id_user from t_user where t_user.login like %s OR t_user.email like %s", (user, user))
     rows = cur.fetchall()
     for row in rows:
-        print(row[0], ' ', str(row[1]).strip())
-    decodatabase(conn)
+        return row[0]
 
-def outputusers(conn):
+def getpassid(conn, password):
     cur = conn.cursor()
-    cur.execute("SELECT id_user, login, email from t_user")
-    print("ID   name email  ")
-    print("--------------")
+    cur.execute("select id_password from t_password where password like %s", (password))
     rows = cur.fetchall()
     for row in rows:
-        print(row[0], ' ', str(row[1]).strip())
-    decodatabase(conn)
+        return row[0]
 
-def checkpassexist(password):
+def checkpassexist(conn, password):
     cur = conn.cursor()
     cur.execute("SELECT * from t_password")
     rows = cur.fetchall()
@@ -192,7 +210,7 @@ def checkpassexist(password):
             return 1
     return 0
 
-def checkuserexist(user):
+def checkuserexist(conn, user):
     cur = conn.cursor()
     cur.execute("SELECT * from t_user")
     rows = cur.fetchall()
