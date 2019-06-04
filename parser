@@ -6,6 +6,7 @@ import chardet
 import codecs
 from typing import Any
 
+################################ nobody should do that shit ###############################
 directory = sys.argv[1]
 global linecount
 global error
@@ -64,73 +65,47 @@ def checkmailorlogin(world):
     else:
         return 1
 
-
 def whatToDo(conn, user, password):
     if (checkuserexist(conn, user) == 1 && checkpassexist(conn, password) == 1):
         # get id pass/user
         userid = getuserid(conn,user)
         passid = getpassid(conn,password)
         # new entry t_dico -> id user id pass
-        
+        insertdico(conn, userid, passid)
     elif (checkuserexist(conn, user) == 0 && checkpassexist(conn, password) == 0):
         # new entry t_pass
         insertpass(conn,password)
-        # new entry t_user
+        # get id pass/user
         insertuser(conn,user)
-        # new entry t_dico ->. iduser idpa.ss
-    elif (checkuserexist(conn, user) == 0 && checkpassexist(conn, password) == 1):
-        # get id password
+        userid = getuserid(conn,user)
         passid = getpassid(conn,password)
-        # new entry t_user
+        # new entry t_dico ->. iduser idpa.ss
+        insertdico(conn, userid, passid)
+    elif (checkuserexist(conn, user) == 0 && checkpassexist(conn, password) == 1):
+        # new entry user
         insertuser(conn,user)
+        # get id pass / user
+        userid = getuserid(conn,user)
+        passid = getpassid(conn,password)
         # new entry t_dico ->. idpass idus.er
+        insertdico(conn, userid, passid)
     elif (checkuserexist(conn, user) == 1 && checkpassexist(conn, password) == 0):
         # get id user
         userid = getuserid(conn,user)
-        # new entry password
+        # new entry password / get password id
         insertpassword(conn,password)
-        # new entry t_dico ->. iduser idpasswo.rd
+        passid = getpassid(conn,password)
+        # new entry t_dico ->. iduser idpassword
+        insertdico(conn, userid, passid)
         
 def parse(line):
     world = line.split(':')
     print world
     conn = connectdatabase()
-    if ( checkmailorlogin(world[0]) == 1 ):
-        print("it's a mail")
-          #whatTodo(conn, world[0], world[1])
-        insertuser(conn, "", world[0])
-        insertpassword(conn, world[1])
-        insertdico(conn, "", world[0], world[1])
-    else:
-        print("it's not a mail")
-        insertuser(conn, world[0], "")
-        insertpassword(conn, world[1])
-        insertdico(conn,world[0], "", world[1])
+    whatTodo(conn, world[0], world[1])
 
-
-        --------------------------------------------------------
-def insertdico(conn, entrylogin, entrymail, entrypass):
-    try:
-        cur = conn.cursor()
-        cur.execute("select id_password from t_password where password like %s", (entrypass))
-        rows = cur.fetchall()
-        for row in rows:
-            idpassword = row[0]
-        if entrylogin == "":
-            cur2 = conn.cursor
-            cur2.execute("select id_user from t_user where email like %s", (entrymail))
-            rows = cur2.fetchall()
-            for row in rows:
-                iduser = row[0]
-        else:
-            cur2 = conn.cursor
-            cur2.execute("select id_user from t_user where login like %s", (entrylogin))
-            rows = cur2.fetchall()
-           for row in rows:
-                iduser = row[0]
-    except Exception:
-        print("InsertDico get ids from entry didn't work")
-
+    ------------------------todo--------------------------------
+def insertdico(conn, userid, passwordid):
     try :
         cur.execute("INSERT INTO t_dico (id_dico, idpassword, iduser) \
                   VALUES (, %s, %s)", (idpassword, iduser));
