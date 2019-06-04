@@ -104,7 +104,6 @@ def parse(line):
     conn = connectdatabase()
     whatTodo(conn, world[0], world[1])
 
-    ------------------------todo--------------------------------
 def insertdico(conn, userid, passwordid):
     try :
         cur.execute("INSERT INTO t_dico (id_dico, idpassword, iduser) \
@@ -113,7 +112,6 @@ def insertdico(conn, userid, passwordid):
         print("Insert Success")
     except Exception :
         print("Insert t_dico didn't work")
-        ----------------------------------------------------------------------
         
 def insertuser(conn, entry):
     if (checkmailorlogin(entry) == 0):
