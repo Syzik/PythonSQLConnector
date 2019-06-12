@@ -1,10 +1,11 @@
 # PythonSQLConnector
 
 ### Put all your password dictionnary in a directory 
-``.``
-``├── 1``
-``│   ├── 1.1.txt``
-``│   ├── 1.2.txt``
+
+```.```
+```├── 1```
+```│   ├── 1.1.txt```
+```│   ├── 1.2.txt```
 ``│   └── my-directory-list.txt``
 ``├── 1.txt``
 ``├── 2``
