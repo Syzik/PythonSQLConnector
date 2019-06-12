@@ -1,7 +1,7 @@
 # PythonSQLConnector
 
 ### Put all your password dictionnary in a directory 
-
+```
 ```.```
 ```├── 1```
 ```│   ├── 1.1.txt```
@@ -28,7 +28,7 @@
 ```├── #test.sh#```
 ```├── test.sh```
 ```└── test.sh~```
-
+```
 ### Copy your parser.py in the root directory 
 ### Python parser.py
 ### Wow it work 
