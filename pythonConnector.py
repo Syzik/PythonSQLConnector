@@ -107,8 +107,9 @@ def parse(line, conn):
 
 def insertdico(conn, userid, passwordid):
     try :
-        cur.execute("INSERT INTO t_dico (idpassword, iduser) VALUES (%s, %s)", (idpassword, iduser))
+        cur.execute("INSERT INTO T_Dico (idpassword, iduser) VALUES (%s, %s)", (idpassword, iduser))
         conn.commit()
+        cur.close()
         print("Insert Success")
     except Exception :
         print("Insert t_dico didn't work")
@@ -118,8 +119,9 @@ def insertuser(conn, entry):
         #login
         try:
             cur = conn.cursor()
-            cur.execute("INSERT INTO t_user (login, mail) VALUES (%s, %s)", (entry, ""))
+            cur.execute("INSERT INTO T_User (login, mail) VALUES (%s, %s)", (entry, ""))
             conn.commit()
+            cur.close()
             print("Insert Success")
         except Exception:
             print("Insert t_user didn't work")
@@ -127,8 +129,9 @@ def insertuser(conn, entry):
         #email
         try:
             cur = conn.cursor()
-            cur.execute("INSERT INTO t_user (login, mail) VALUES (%s, %s)", ("", ntry))
+            cur.execute("INSERT INTO T_User (login, mail) VALUES (%s, %s)", ("", ntry))
             conn.commit()
+            cur.close()
             print("Insert Success")
         except Exception:
             print("Insert t_user didn't work") 
@@ -136,8 +139,9 @@ def insertuser(conn, entry):
 def insertpassword(conn, entrypass):
     try:
         cur = conn.cursor()
-        cur.execute("INSERT INTO t_password ( password) VALUES (%s)", (entrypass))
+        cur.execute("INSERT INTO T_Password ( password) VALUES (%s)", (entrypass))
         conn.commit()
+        cur.close()
         print("Insert Success")
     except Exception :
         print("Insert t_password didn't work")
@@ -159,21 +163,21 @@ def decodatabase(conn):
 
 def getuserid(conn, user):
     cur = conn.cursor()
-    cur.execute("select id_user from t_user where t_user.login like %s OR t_user.email like %s", (user, user))
+    cur.execute("select id_user from T_User where T_User.login like %s OR T_User.email like %s", (user, user))
     rows = cur.fetchall()
     for row in rows:
         return row[0]
 
 def getpassid(conn, password):
     cur = conn.cursor()
-    cur.execute("select id_password from t_password where password like %s", (password))
+    cur.execute("select id_password from T_Password where password like %s", (password))
     rows = cur.fetchall()
     for row in rows:
         return row[0]
 
 def checkpassexist(conn, password):
     cur = conn.cursor()
-    cur.execute("SELECT * from t_password")
+    cur.execute("SELECT * from T_Password")
     rows = cur.fetchall()
     for row in rows:
         if (password == row[1]):
@@ -182,7 +186,7 @@ def checkpassexist(conn, password):
 
 def checkuserexist(conn, user):
     cur = conn.cursor()
-    cur.execute("SELECT * from t_user")
+    cur.execute("SELECT * from T_User")
     rows = cur.fetchall()
     for row in rows:
         if (user == row[1]):
