@@ -142,7 +142,7 @@ def insertpassword(conn, entrypass):
         cur.execute("INSERT INTO password (id_password, password) \
                VALUES (, %s)", (entrypass));
         conn.commit()
-        print("Insert Success"
+        print("Insert Success")
     except Exception :
         print("Insert t_password didn't work")
 
