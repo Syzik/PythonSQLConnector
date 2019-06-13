@@ -50,14 +50,15 @@ def readfile(filename, conn):
     global error
     with open(filename) as f:
         for line in f:
-            charesult = chardet.detect(line)
             try :
+                charesult = chardet.detect(line)
                 parse(line.decode(charesult['encoding']),conn)
             except :
                 error += 1
                 print("error : %s\n" % (error))
                 continue
             linecount = linecount + 1
+            print("line checked : %s\n"% linecount)
 
 def checkmailorlogin(world):
     EMAIL_REGEX = re.compile(r"[^@]+@[^@]+\.[^@]+")
