@@ -107,7 +107,7 @@ def parse(line, conn):
 
 def insertdico(conn, userid, passwordid):
     try :
-        cur.execute("INSERT INTO T_Dico (idpassword, iduser) VALUES (%s, %s)", (idpassword, iduser))
+        cur.execute("INSERT INTO T_Dico (idpassword, iduser) VALUES ('%s', '%s')", (idpassword, iduser))
         conn.commit()
         cur.close()
         print("Insert Success")
@@ -119,7 +119,7 @@ def insertuser(conn, entry):
         #login
         try:
             cur = conn.cursor()
-            cur.execute("INSERT INTO T_User (login, mail) VALUES (%s, %s)", (entry, ""))
+            cur.execute("INSERT INTO T_User (login, mail) VALUES ('%s', '%s')", (entry, ""))
             conn.commit()
             cur.close()
             print("Insert Success")
@@ -129,7 +129,7 @@ def insertuser(conn, entry):
         #email
         try:
             cur = conn.cursor()
-            cur.execute("INSERT INTO T_User (login, mail) VALUES (%s, %s)", ("", entry))
+            cur.execute("INSERT INTO T_User (login, mail) VALUES ('%s', '%s')", ("", entry))
             conn.commit()
             cur.close()
             print("Insert Success")
@@ -139,7 +139,7 @@ def insertuser(conn, entry):
 def insertpassword(conn, entrypass):
     try:
         cur = conn.cursor()
-        cur.execute("INSERT INTO T_Password ( password) VALUES (%s)", (entrypass))
+        cur.execute("INSERT INTO T_Password (password) VALUES ('%s')", (entrypass))
         conn.commit()
         cur.close()
         print("Insert Success")
