@@ -66,13 +66,13 @@ def checkmailorlogin(world):
         return 1
 
 def whatToDo(conn, user, password):
-    if (checkuserexist(conn, user) == 1 && checkpassexist(conn, password) == 1):
+    if ((checkuserexist(conn, user) == 1) and (checkpassexist(conn, password)) == 1):
         # get id pass/user
         userid = getuserid(conn,user)
         passid = getpassid(conn,password)
         # new entry t_dico -> id user id pass
         insertdico(conn, userid, passid)
-    elif (checkuserexist(conn, user) == 0 && checkpassexist(conn, password) == 0):
+    elif (checkuserexist(conn, user) == 0 and checkpassexist(conn, password) == 0):
         # new entry t_pass
         insertpass(conn,password)
         # get id pass/user
@@ -81,7 +81,7 @@ def whatToDo(conn, user, password):
         passid = getpassid(conn,password)
         # new entry t_dico ->. iduser idpa.ss
         insertdico(conn, userid, passid)
-    elif (checkuserexist(conn, user) == 0 && checkpassexist(conn, password) == 1):
+    elif (checkuserexist(conn, user) == 0 and checkpassexist(conn, password) == 1):
         # new entry user
         insertuser(conn,user)
         # get id pass / user
@@ -89,7 +89,7 @@ def whatToDo(conn, user, password):
         passid = getpassid(conn,password)
         # new entry t_dico ->. idpass idus.er
         insertdico(conn, userid, passid)
-    elif (checkuserexist(conn, user) == 1 && checkpassexist(conn, password) == 0):
+    elif (checkuserexist(conn, user) == 1 and checkpassexist(conn, password) == 0):
         # get id user
         userid = getuserid(conn,user)
         # new entry password / get password id
@@ -100,7 +100,7 @@ def whatToDo(conn, user, password):
         
 def parse(line):
     world = line.split(':')
-    print world
+    print(world)
     conn = connectdatabase()
     whatTodo(conn, world[0], world[1])
 
@@ -151,7 +151,7 @@ def checkentry(conn):
 
 def connectdatabase():
     try :
-        conn = psycopg2.connect(database="dbpassword", user="mypguser", password="", host="127.0.0.1", port="5432")
+        conn = psycopg2.connect(database="dbpassword", user="postgres", password="", host="127.0.0.1", port="5432")
         print("Database Connected....")
         return conn
     except Exception :
