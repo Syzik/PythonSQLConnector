@@ -151,7 +151,7 @@ def checkentry(conn):
 
 def connectdatabase():
     try :
-        conn = psycopg2.connect(database="dbpassword", user="postgres", password="", host="127.0.0.1", port="5432")
+        conn = psycopg2.connect("dbname='dbpass' user='postgres' host='localhost' password='postgres'")
         print("Database Connected....")
         return conn
     except Exception :
