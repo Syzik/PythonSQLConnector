@@ -25,7 +25,7 @@ def whatToDo(conn, user, password):
         insertdico(conn, userid, passid)
     elif (checkuserexist(conn, user) == 0 and checkpassexist(conn, password) == 0):
         # new entry t_pass
-        insertpass(conn,password)
+        insertpassword(conn,password)
         # get id pass/user
         insertuser(conn,user)
         userid = getuserid(conn,user)
