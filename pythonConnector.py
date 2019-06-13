@@ -141,7 +141,7 @@ def insertpassword(conn, entrypass):
         cur.execute("INSERT INTO password (id_password, password) \
                VALUES (, %s)", (entrypass));
         conn.commit()
-        print("Insert Success")
+        print("Insert Success"
     except Exception :
         print("Insert t_password didn't work")
 
@@ -151,7 +151,7 @@ def checkentry(conn):
 
 def connectdatabase():
     try :
-        conn = psycopg2.connect(database="dbpassword", user="postgres", password="", host="127.0.0.1", port="5432")
+        conn = psycopg2.connect(database="dbpassword", user="mypguser", password="", host="127.0.0.1", port="5432")
         print("Database Connected....")
         return conn
     except Exception :
