@@ -21,6 +21,7 @@ def readDirectory(directory):
     global  linecount
     print('directory = ' + directory)
     print('directory (absolute) = ' + os.path.abspath(directory))
+    conn = connectdatabase()
 
     for root, subdirs, files in os.walk(directory):
         print('--\nroot = ' + root)
@@ -37,21 +38,21 @@ def readDirectory(directory):
                 with open(file_path, 'rb') as f:
                     filecount = filecount + 1
                     print("filecount = %s\n" % (filecount))
-                    readfile(file_path)
+                    readfile(file_path, conn)
                     print('line count : %s' % linecount)
                     f_content = f.read()
                     list_file.write(('The file %s contains:\n' % filename).encode('utf-8'))
                     list_file.write(f_content)
                     list_file.write(b'\n')
 
-def readfile(filename):
+def readfile(filename, conn):
     global linecount
     global error
     with open(filename) as f:
         for line in f:
             charesult = chardet.detect(line)
             try :
-                parse(line.decode(charesult['encoding']))
+                parse(line.decode(charesult['encoding']),conn)
             except :
                 error += 1
                 print("error : %s\n" % (error))
@@ -98,7 +99,7 @@ def whatToDo(conn, user, password):
         # new entry t_dico ->. iduser idpassword
         insertdico(conn, userid, passid)
         
-def parse(line):
+def parse(line, conn):
     world = line.split(':')
     print(world)
     conn = connectdatabase()
