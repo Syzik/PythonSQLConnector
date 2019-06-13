@@ -16,6 +16,39 @@ linecount = 0
 def main():
     readDirectory(directory)
 
+def whatToDo(conn, user, password):
+    if ((checkuserexist(conn, user) == 1) and (checkpassexist(conn, password)) == 1):
+        # get id pass/user
+        userid = getuserid(conn,user)
+        passid = getpassid(conn,password)
+        # new entry t_dico -> id user id pass
+        insertdico(conn, userid, passid)
+    elif (checkuserexist(conn, user) == 0 and checkpassexist(conn, password) == 0):
+        # new entry t_pass
+        insertpass(conn,password)
+        # get id pass/user
+        insertuser(conn,user)
+        userid = getuserid(conn,user)
+        passid = getpassid(conn,password)
+        # new entry t_dico ->. iduser idpa.ss
+        insertdico(conn, userid, passid)
+    elif (checkuserexist(conn, user) == 0 and checkpassexist(conn, password) == 1):
+        # new entry user
+        insertuser(conn,user)
+        # get id pass / user
+        userid = getuserid(conn,user)
+        passid = getpassid(conn,password)
+        # new entry t_dico ->. idpass idus.er
+        insertdico(conn, userid, passid)
+    elif (checkuserexist(conn, user) == 1 and checkpassexist(conn, password) == 0):
+        # get id user
+        userid = getuserid(conn,user)
+        # new entry password / get password id
+        insertpassword(conn,password)
+        passid = getpassid(conn,password)
+        # new entry t_dico ->. iduser idpassword
+        insertdico(conn, userid, passid)
+ 
 def readDirectory(directory):
     filecount = 0
     global  linecount
@@ -66,40 +99,7 @@ def checkmailorlogin(world):
         return 0
     else:
         return 1
-
-def whatToDo(conn, user, password):
-    if ((checkuserexist(conn, user) == 1) and (checkpassexist(conn, password)) == 1):
-        # get id pass/user
-        userid = getuserid(conn,user)
-        passid = getpassid(conn,password)
-        # new entry t_dico -> id user id pass
-        insertdico(conn, userid, passid)
-    elif (checkuserexist(conn, user) == 0 and checkpassexist(conn, password) == 0):
-        # new entry t_pass
-        insertpass(conn,password)
-        # get id pass/user
-        insertuser(conn,user)
-        userid = getuserid(conn,user)
-        passid = getpassid(conn,password)
-        # new entry t_dico ->. iduser idpa.ss
-        insertdico(conn, userid, passid)
-    elif (checkuserexist(conn, user) == 0 and checkpassexist(conn, password) == 1):
-        # new entry user
-        insertuser(conn,user)
-        # get id pass / user
-        userid = getuserid(conn,user)
-        passid = getpassid(conn,password)
-        # new entry t_dico ->. idpass idus.er
-        insertdico(conn, userid, passid)
-    elif (checkuserexist(conn, user) == 1 and checkpassexist(conn, password) == 0):
-        # get id user
-        userid = getuserid(conn,user)
-        # new entry password / get password id
-        insertpassword(conn,password)
-        passid = getpassid(conn,password)
-        # new entry t_dico ->. iduser idpassword
-        insertdico(conn, userid, passid)
-        
+       
 def parse(line, conn):
     world = line.split(':')
     print(world)
