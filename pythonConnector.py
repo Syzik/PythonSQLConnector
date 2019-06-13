@@ -25,7 +25,7 @@ def whatToDo(conn, user, password):
         insertdico(conn, userid, passid)
     elif (checkuserexist(conn, user) == 0 and checkpassexist(conn, password) == 0):
         # new entry t_pass
-        insertpassword(conn,password)
+        insertpass(conn,password)
         # get id pass/user
         insertuser(conn,user)
         userid = getuserid(conn,user)
@@ -107,8 +107,7 @@ def parse(line, conn):
 
 def insertdico(conn, userid, passwordid):
     try :
-        cur.execute("INSERT INTO t_dico (id_dico, idpassword, iduser) \
-                  VALUES (, %s, %s)", (idpassword, iduser));
+        cur.execute("INSERT INTO t_dico (idpassword, iduser) VALUES (%s, %s)", (idpassword, iduser))
         conn.commit()
         print("Insert Success")
     except Exception :
@@ -119,8 +118,7 @@ def insertuser(conn, entry):
         #login
         try:
             cur = conn.cursor()
-            cur.execute("INSERT INTO t_user (id_user, login, mail) \
-                 VALUES (, %s, %s)", (entry, ""));
+            cur.execute("INSERT INTO t_user (login, mail) VALUES (%s, %s)", (entry, ""))
             conn.commit()
             print("Insert Success")
         except Exception:
@@ -129,8 +127,7 @@ def insertuser(conn, entry):
         #email
         try:
             cur = conn.cursor()
-            cur.execute("INSERT INTO t_user (id_user, login, mail) \
-                 VALUES (, %s, %s)", ("", entry));
+            cur.execute("INSERT INTO t_user (login, mail) VALUES (%s, %s)", ("", ntry))
             conn.commit()
             print("Insert Success")
         except Exception:
@@ -139,8 +136,7 @@ def insertuser(conn, entry):
 def insertpassword(conn, entrypass):
     try:
         cur = conn.cursor()
-        cur.execute("INSERT INTO password (id_password, password) \
-               VALUES (, %s)", (entrypass));
+        cur.execute("INSERT INTO t_password ( password) VALUES (%s)", (entrypass))
         conn.commit()
         print("Insert Success")
     except Exception :
