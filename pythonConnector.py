@@ -102,7 +102,6 @@ def whatToDo(conn, user, password):
 def parse(line, conn):
     world = line.split(':')
     print(world)
-    conn = connectdatabase()
     whatTodo(conn, world[0], world[1])
 
 def insertdico(conn, userid, passwordid):
