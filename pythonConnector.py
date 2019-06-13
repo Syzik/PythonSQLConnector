@@ -112,7 +112,7 @@ def insertdico(conn, userid, passwordid):
         cur.close()
         print("Insert Success")
     except Exception :
-        print("Insert t_dico didn't work")
+        print("Insert t_dico didn't work %s\n" % Exception)
         
 def insertuser(conn, entry):
     if (checkmailorlogin(entry) == 0):
@@ -124,17 +124,17 @@ def insertuser(conn, entry):
             cur.close()
             print("Insert Success")
         except Exception:
-            print("Insert t_user didn't work")
+            print("Insert t_user didn't work : %s\n" % Exception)
     else:
         #email
         try:
             cur = conn.cursor()
-            cur.execute("INSERT INTO T_User (login, mail) VALUES (%s, %s)", ("", ntry))
+            cur.execute("INSERT INTO T_User (login, mail) VALUES (%s, %s)", ("", entry))
             conn.commit()
             cur.close()
             print("Insert Success")
         except Exception:
-            print("Insert t_user didn't work") 
+            print("Insert t_user didn't work : %s\n"% Exception) 
         
 def insertpassword(conn, entrypass):
     try:
@@ -144,7 +144,7 @@ def insertpassword(conn, entrypass):
         cur.close()
         print("Insert Success")
     except Exception :
-        print("Insert t_password didn't work")
+        print("Insert t_password didn't work %s\n" % Exception)
 
 def checkentry(conn):
     outputpasswords(conn)
@@ -156,7 +156,7 @@ def connectdatabase():
         print("Database Connected....")
         return conn
     except Exception :
-        print("Connection bdd didn't work")
+        print("Connection bdd didn't work %s\n" % Exception)
 
 def decodatabase(conn):
     conn.close()
